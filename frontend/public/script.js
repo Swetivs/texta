@@ -152,14 +152,14 @@ function displayHistogram(data, totalWords, timeTakenMs, detectedLang) {
         // Găsim cea mai mare frecvență pentru a calcula lățimea barelor relativ
         const maxCount = data[0].count;
 
-        // Calculăm indexul de tăiere la 50%
-        const cutoffIndex = Math.ceil(data.length * 0.50);
+        // Calculăm indexul de tăiere la 25% (aratăm 25%, ascundem 75%)
+        const cutoffIndex = Math.ceil(data.length * 0.25);
 
         data.forEach((item, index) => {
             const row = document.createElement('div');
             row.className = 'histogram-row';
 
-            // Dacă e în ultimii 50%, adăugăm o clasă pentru a o ascunde inițial
+            // Dacă e în restul de 75%, adăugăm o clasă pentru a o ascunde inițial
             if (index >= cutoffIndex) {
                 row.classList.add('hidden-row');
                 row.style.display = 'none';
@@ -207,7 +207,7 @@ function displayHistogram(data, totalWords, timeTakenMs, detectedLang) {
 
                 if (isHidden) {
                     hiddenRows.forEach(row => { row.style.display = 'flex'; });
-                    toggleButton.innerHTML = '<i class="fas fa-chevron-up me-2"></i> Ascunde 50% din rezultate (mai puțin folosite)';
+                    toggleButton.innerHTML = '<i class="fas fa-chevron-up me-2"></i> Ascunde 75% din rezultate (mai puțin folosite)';
                 } else {
                     hiddenRows.forEach(row => { row.style.display = 'none'; });
                     toggleButton.innerHTML = '<i class="fas fa-chevron-down me-2"></i> Afișează toate cuvintele';

@@ -96,10 +96,19 @@ function displayHistogram(data, totalWords, timeTakenMs) {
     } else {
         // Găsim cea mai mare frecvență pentru a calcula lățimea barelor relativ
         const maxCount = data[0].count;
+        
+        // Calculăm indexul de tăiere la 50%
+        const cutoffIndex = Math.ceil(data.length * 0.50);
 
-        data.forEach(item => {
+        data.forEach((item, index) => {
             const row = document.createElement('div');
             row.className = 'histogram-row';
+            
+            // Dacă e în ultimii 50%, adăugăm o clasă pentru a o ascunde inițial
+            if (index >= cutoffIndex) {
+                row.classList.add('hidden-row');
+                row.style.display = 'none';
+            }
 
             const label = document.createElement('div');
             label.className = 'word-label';
@@ -126,6 +135,35 @@ function displayHistogram(data, totalWords, timeTakenMs) {
             row.appendChild(barWrapper);
             container.appendChild(row);
         });
+
+        // Adăugăm butonul de comutare dacă există rânduri ascunse (cel puțin un cuvânt cade în jumătatea a doua)
+        if (data.length > cutoffIndex) {
+            const toggleButtonContainer = document.createElement('div');
+            toggleButtonContainer.className = 'text-center mt-4';
+
+            const toggleButton = document.createElement('button');
+            toggleButton.className = 'btn btn-outline-secondary px-4 py-2 fw-bold';
+            toggleButton.innerHTML = '<i class="fas fa-chevron-down me-2"></i> Afișează toate cuvintele';
+            
+            let isHidden = true;
+
+            toggleButton.addEventListener('click', () => {
+                const hiddenRows = document.querySelectorAll('.hidden-row');
+                
+                if (isHidden) {
+                    hiddenRows.forEach(row => { row.style.display = 'flex'; });
+                    toggleButton.innerHTML = '<i class="fas fa-chevron-up me-2"></i> Ascunde 50% din rezultate (mai puțin folosite)';
+                } else {
+                    hiddenRows.forEach(row => { row.style.display = 'none'; });
+                    toggleButton.innerHTML = '<i class="fas fa-chevron-down me-2"></i> Afișează toate cuvintele';
+                }
+                
+                isHidden = !isHidden;
+            });
+
+            toggleButtonContainer.appendChild(toggleButton);
+            container.appendChild(toggleButtonContainer);
+        }
     }
 
     resultsSection.style.display = 'block';

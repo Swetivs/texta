@@ -39,7 +39,7 @@ async function fetchGlobalStats() {
     try {
         const response = await fetch('/api/global-stats');
         const data = await response.json();
-        
+
         populateTopList("topEnList", data.en);
         populateTopList("topRoList", data.ro);
     } catch (err) {
@@ -51,20 +51,20 @@ function populateTopList(elementId, items) {
     const list = document.getElementById(elementId);
     list.innerHTML = '';
     if (!items || items.length === 0) {
-    list.innerHTML = `<li class="list-group-item bg-transparent border-0 text-muted">Momentan gol.</li>`;
-    return;
+        list.innerHTML = `<li class="list-group-item bg-transparent border-0 text-muted">Momentan gol.</li>`;
+        return;
     }
-    
+
     items.forEach(item => {
-    const li = document.createElement("li");
-    li.className = "list-group-item d-flex justify-content-between align-items-start bg-transparent border-bottom border-secondary border-opacity-25";
-    li.innerHTML = `
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-start bg-transparent border-bottom border-secondary border-opacity-25";
+        li.innerHTML = `
         <div class="ms-2 me-auto">
         <div class="fw-bold">${item.word}</div>
         </div>
         <span class="badge bg-success rounded-pill">${item.count}</span>
     `;
-    list.appendChild(li);
+        list.appendChild(li);
     });
 }
 

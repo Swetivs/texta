@@ -42,7 +42,12 @@ function getTop10() {
         // Convertim in array de inregistrari si le sortam
         const sorted = Object.keys(stats[lang]).map(w => {
             return { word: w, count: stats[lang][w] };
-        }).sort((a, b) => b.count - a.count).slice(0, 10);
+        }).sort((a, b) => {
+            if (b.count === a.count) {
+                return a.word.localeCompare(b.word);
+            }
+            return b.count - a.count;
+        }).slice(0, 10);
         
         top[lang] = sorted;
     });

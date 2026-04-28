@@ -8,7 +8,8 @@ const { updateStats, getTop10 } = require('./statsManager');
 
 const lngDetector = new LanguageDetect();
 const app = express();
-const port = 3000;
+// Folosim un port furnizat de host-ul din cloud, in caz contrar ne legam la 3000 pe local
+const port = process.env.PORT || 3000;
 
 // Set up storage for Multer
 const upload = multer({ dest: 'uploads/' });

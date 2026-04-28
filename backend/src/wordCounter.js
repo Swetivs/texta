@@ -12,13 +12,18 @@ function countWords(text) {
         frequencyMap[word] = (frequencyMap[word] || 0) + 1;
     });
 
-    // Sortam descrescator dupa frecventa
+    // Sortam descrescator dupa frecventa (in caz de egalitate, sortam alfabetic)
     const sortedFrequencies = Object.keys(frequencyMap).map(word => {
         return {
             word: word,
             count: frequencyMap[word]
         };
-    }).sort((a, b) => b.count - a.count);
+    }).sort((a, b) => {
+        if (b.count === a.count) {
+            return a.word.localeCompare(b.word);
+        }
+        return b.count - a.count;
+    });
 
     return { frequencies: sortedFrequencies, totalWords: words.length };
 }

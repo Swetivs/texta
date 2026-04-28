@@ -152,8 +152,20 @@ function displayHistogram(data, totalWords, timeTakenMs, detectedLang) {
         // Găsim cea mai mare frecvență pentru a calcula lățimea barelor relativ
         const maxCount = data[0].count;
 
-        // Calculăm indexul de tăiere la 25% (aratăm 25%, ascundem 75%)
-        const cutoffIndex = Math.ceil(data.length * 0.25);
+        // Determinam procentul de afisare in functie de numarul total de cuvinte
+        let displayPercentage;
+        if (totalWords > 5000) {
+            displayPercentage = 0.25; // arată 25%
+        } else if (totalWords > 1000) {
+            displayPercentage = 0.50; // arată 50%
+        } else if (totalWords > 250) {
+            displayPercentage = 0.75; // arată 75%
+        } else {
+            displayPercentage = 1.0; // arată toate
+        }
+
+        // Calculăm indexul de tăiere pe baza procentului determinat mai sus
+        const cutoffIndex = Math.ceil(data.length * displayPercentage);
 
         data.forEach((item, index) => {
             const row = document.createElement('div');

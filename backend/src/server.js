@@ -24,8 +24,17 @@ app.post('/api/analyze-text', (req, res) => {
         return res.status(400).json({ error: 'Niciun text valid furnizat.' });
     }
 
-    const frequencies = countWords(text);
-    res.json({ data: frequencies });
+    const { performance } = require('perf_hooks');
+    const start = performance.now();
+    const result = countWords(text);
+    const end = performance.now();
+    const timeTaken = (end - start).toFixed(2); // ms
+
+    res.json({
+        data: result.frequencies,
+        totalWords: result.totalWords,
+        timeTakenMs: timeTaken
+    });
 });
 
 // Endpoint to handle file upload and process text
@@ -42,15 +51,25 @@ app.post('/api/analyze-file', upload.single('textFile'), (req, res) => {
             return res.status(500).json({ error: 'Eroare la citirea fișierului.' });
         }
 
+        const { performance } = require('perf_hooks');
+        const start = performance.now();
+        
         // Count words and get sorted frequencies
-        const frequencies = countWords(data);
+        const result = countWords(data);
+
+        const end = performance.now();
+        const timeTaken = (end - start).toFixed(2); // ms
 
         // Clean up the uploaded file after processing
         fs.unlink(filePath, (unlinkErr) => {
             if (unlinkErr) console.error('Eroare la stergerea fisierului:', unlinkErr);
         });
 
-        res.json({ data: frequencies });
+        res.json({
+            data: result.frequencies,
+            totalWords: result.totalWords,
+            timeTakenMs: timeTaken
+        });
     });
 });
 

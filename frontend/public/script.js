@@ -38,7 +38,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         const result = await response.json();
 
         if (response.ok) {
-            displayHistogram(result.data);
+            displayHistogram(result.data, result.totalWords, result.timeTakenMs);
         } else {
             alert('Eroare: ' + result.error);
         }
@@ -48,9 +48,12 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     }
 });
 
-function displayHistogram(data) {
+function displayHistogram(data, totalWords, timeTakenMs) {
     const resultsSection = document.getElementById('resultsSection');
     const container = document.getElementById('histogramContainer');
+    
+    document.getElementById('totalWordsCount').textContent = totalWords;
+    document.getElementById('timeTakenText').textContent = timeTakenMs;
 
     container.innerHTML = ''; // Curățăm rezultatele anterioare
 

@@ -1,10 +1,10 @@
 function countWords(text) {
-    if (!text) return [];
+    if (!text) return { frequencies: [], totalWords: 0 };
 
-    // Transform in litere mici si extragem cuvintele folosind regex (doar caractere alfanumerice)
-    const words = text.toLowerCase().match(/\b[\wăâîșț]+\b/g);
+    // Transform in litere mici si extragem cuvintele folosind regex (doar caractere alfanumerice + diacritice)
+    const words = text.toLowerCase().match(/[a-z0-9ăâîșț]+/g);
     
-    if (!words) return [];
+    if (!words) return { frequencies: [], totalWords: 0 };
 
     const frequencyMap = {};
 
@@ -20,7 +20,7 @@ function countWords(text) {
         };
     }).sort((a, b) => b.count - a.count);
 
-    return sortedFrequencies;
+    return { frequencies: sortedFrequencies, totalWords: words.length };
 }
 
 module.exports = { countWords };

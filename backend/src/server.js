@@ -30,9 +30,9 @@ app.get('/api/global-stats', (req, res) => {
 function processTextLanguageAndStats(text, result) {
     const detected = lngDetector.detect(text, 1);
     let lang = 'unknown'; // default
-    
+
     if (detected && detected.length > 0) {
-        const primaryLang = detected[0][0]; 
+        const primaryLang = detected[0][0];
         if (primaryLang === 'english') lang = 'en';
         else if (primaryLang === 'romanian') lang = 'ro';
     }
@@ -40,7 +40,7 @@ function processTextLanguageAndStats(text, result) {
     if (lang === 'en' || lang === 'ro') {
         updateStats(lang, result.frequencies);
     }
-    
+
     return lang;
 }
 
@@ -84,7 +84,7 @@ app.post('/api/analyze-file', upload.single('textFile'), (req, res) => {
 
         const { performance } = require('perf_hooks');
         const start = performance.now();
-        
+
         // Count words and get sorted frequencies
         const result = countWords(data);
 

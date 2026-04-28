@@ -20,7 +20,7 @@ function saveStats(stats) {
 
 function updateStats(lang, wordFrequencies) {
     if (lang !== 'en' && lang !== 'ro') return; // Ne intereseaza doar EN si RO
-    
+
     const stats = getStats();
     if (!stats[lang]) stats[lang] = {};
 
@@ -35,10 +35,10 @@ function updateStats(lang, wordFrequencies) {
 function getTop10() {
     const stats = getStats();
     const top = { en: [], ro: [] };
-    
+
     ['en', 'ro'].forEach(lang => {
         if (!stats[lang]) return;
-        
+
         // Convertim in array de inregistrari si le sortam
         const sorted = Object.keys(stats[lang]).map(w => {
             return { word: w, count: stats[lang][w] };
@@ -48,10 +48,10 @@ function getTop10() {
             }
             return b.count - a.count;
         }).slice(0, 10);
-        
+
         top[lang] = sorted;
     });
-    
+
     return top;
 }
 

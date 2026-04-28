@@ -29,7 +29,44 @@ document.addEventListener('DOMContentLoaded', () => {
             themeToggleBtn.classList.replace('btn-outline-dark', 'btn-outline-success');
         }
     });
+
+    // Apel initial pentru a popula topurile de-ndata ce intra userul pe pagina
+    fetchGlobalStats();
 });
+
+// ===== FETCH TOP 10 GLOBAL =====
+async function fetchGlobalStats() {
+    try {
+        const response = await fetch('/api/global-stats');
+        const data = await response.json();
+        
+        populateTopList("topEnList", data.en);
+        populateTopList("topRoList", data.ro);
+    } catch (err) {
+        console.error("Eroare la aducerea topurilor.", err);
+    }
+}
+
+function populateTopList(elementId, items) {
+    const list = document.getElementById(elementId);
+    list.innerHTML = '';
+    if (!items || items.length === 0) {
+    list.innerHTML = `<li class="list-group-item bg-transparent border-0 text-muted">Momentan gol.</li>`;
+    return;
+    }
+    
+    items.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "list-group-item d-flex justify-content-between align-items-start bg-transparent border-bottom border-secondary border-opacity-25";
+    li.innerHTML = `
+        <div class="ms-2 me-auto">
+        <div class="fw-bold">${item.word}</div>
+        </div>
+        <span class="badge bg-success rounded-pill">${item.count}</span>
+    `;
+    list.appendChild(li);
+    });
+}
 
 // ===== LOGICA FORMULARULUI =====
 document.getElementById('uploadForm').addEventListener('submit', async (e) => {
@@ -72,7 +109,8 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         const result = await response.json();
 
         if (response.ok) {
-            displayHistogram(result.data, result.totalWords, result.timeTakenMs);
+            displayHistogram(result.data, result.totalWords, result.timeTakenMs, result.detectedLang);
+            fetchGlobalStats(); // Update top in background
         } else {
             alert('Eroare: ' + result.error);
         }
@@ -82,12 +120,29 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     }
 });
 
-function displayHistogram(data, totalWords, timeTakenMs) {
+function displayHistogram(data, totalWords, timeTakenMs, detectedLang) {
     const resultsSection = document.getElementById('resultsSection');
     const container = document.getElementById('histogramContainer');
+    const alertBox = document.getElementById("detectedLangAlert");
+    const msgBox = document.getElementById("detectedLangMsg");
 
     document.getElementById('totalWordsCount').textContent = totalWords;
     document.getElementById('timeTakenText').textContent = timeTakenMs;
+
+    // Setam mesajul si vizibilitatea pentru limba
+    if (detectedLang === 'ro') {
+        msgBox.innerHTML = `<strong>A fost detectată limba: Română</strong>. S-a adăugat la topul RO.`;
+        alertBox.style.display = "flex";
+        alertBox.className = "alert alert-success d-flex align-items-center mb-3 mt-3";
+    } else if (detectedLang === 'en') {
+        msgBox.innerHTML = `<strong>A fost detectată limba: Engleză</strong>. S-a adăugat la topul EN.`;
+        alertBox.style.display = "flex";
+        alertBox.className = "alert alert-info d-flex align-items-center mb-3 mt-3";
+    } else {
+        msgBox.innerHTML = `<strong>Limbă Neidentificată</strong>. Nu s-a adunat în rezultatele globale.`;
+        alertBox.style.display = "flex";
+        alertBox.className = "alert alert-secondary d-flex align-items-center mb-3 mt-3";
+    }
 
     container.innerHTML = ''; // Curățăm rezultatele anterioare
 
@@ -96,14 +151,14 @@ function displayHistogram(data, totalWords, timeTakenMs) {
     } else {
         // Găsim cea mai mare frecvență pentru a calcula lățimea barelor relativ
         const maxCount = data[0].count;
-        
+
         // Calculăm indexul de tăiere la 50%
         const cutoffIndex = Math.ceil(data.length * 0.50);
 
         data.forEach((item, index) => {
             const row = document.createElement('div');
             row.className = 'histogram-row';
-            
+
             // Dacă e în ultimii 50%, adăugăm o clasă pentru a o ascunde inițial
             if (index >= cutoffIndex) {
                 row.classList.add('hidden-row');
@@ -144,12 +199,12 @@ function displayHistogram(data, totalWords, timeTakenMs) {
             const toggleButton = document.createElement('button');
             toggleButton.className = 'btn btn-outline-secondary px-4 py-2 fw-bold';
             toggleButton.innerHTML = '<i class="fas fa-chevron-down me-2"></i> Afișează toate cuvintele';
-            
+
             let isHidden = true;
 
             toggleButton.addEventListener('click', () => {
                 const hiddenRows = document.querySelectorAll('.hidden-row');
-                
+
                 if (isHidden) {
                     hiddenRows.forEach(row => { row.style.display = 'flex'; });
                     toggleButton.innerHTML = '<i class="fas fa-chevron-up me-2"></i> Ascunde 50% din rezultate (mai puțin folosite)';
@@ -157,7 +212,7 @@ function displayHistogram(data, totalWords, timeTakenMs) {
                     hiddenRows.forEach(row => { row.style.display = 'none'; });
                     toggleButton.innerHTML = '<i class="fas fa-chevron-down me-2"></i> Afișează toate cuvintele';
                 }
-                
+
                 isHidden = !isHidden;
             });
 

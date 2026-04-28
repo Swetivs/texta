@@ -3,7 +3,10 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const { countWords } = require('./wordCounter');
+const LanguageDetect = require('languagedetect');
+const { updateStats, getTop10 } = require('./statsManager');
 
+const lngDetector = new LanguageDetect();
 const app = express();
 const port = 3000;
 
@@ -16,6 +19,29 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Serve static files from the frontend directory
 app.use(express.static(path.join(__dirname, '../../frontend/public')));
+
+// Endpoint pentru initializarea topurilor
+app.get('/api/global-stats', (req, res) => {
+    res.json(getTop10());
+});
+
+// Functie helper pentru procesarea limbii
+function processTextLanguageAndStats(text, result) {
+    const detected = lngDetector.detect(text, 1);
+    let lang = 'unknown'; // default
+    
+    if (detected && detected.length > 0) {
+        const primaryLang = detected[0][0]; 
+        if (primaryLang === 'english') lang = 'en';
+        else if (primaryLang === 'romanian') lang = 'ro';
+    }
+
+    if (lang === 'en' || lang === 'ro') {
+        updateStats(lang, result.frequencies);
+    }
+    
+    return lang;
+}
 
 // Endpoint to handle raw text input
 app.post('/api/analyze-text', (req, res) => {
@@ -31,10 +57,13 @@ app.post('/api/analyze-text', (req, res) => {
     const end = performance.now();
     const timeTaken = (end - start).toFixed(2); // ms
 
+    const detectedLang = processTextLanguageAndStats(text, result);
+
     res.json({
         data: result.frequencies,
         totalWords: result.totalWords,
-        timeTakenMs: timeTaken
+        timeTakenMs: timeTaken,
+        detectedLang: detectedLang
     });
 });
 
@@ -61,6 +90,8 @@ app.post('/api/analyze-file', upload.single('textFile'), (req, res) => {
         const end = performance.now();
         const timeTaken = (end - start).toFixed(2); // ms
 
+        const detectedLang = processTextLanguageAndStats(data, result);
+
         // Clean up the uploaded file after processing
         fs.unlink(filePath, (unlinkErr) => {
             if (unlinkErr) console.error('Eroare la stergerea fisierului:', unlinkErr);
@@ -69,7 +100,8 @@ app.post('/api/analyze-file', upload.single('textFile'), (req, res) => {
         res.json({
             data: result.frequencies,
             totalWords: result.totalWords,
-            timeTakenMs: timeTaken
+            timeTakenMs: timeTaken,
+            detectedLang: detectedLang
         });
     });
 });

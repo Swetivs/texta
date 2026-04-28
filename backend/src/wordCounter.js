@@ -1,8 +1,8 @@
 function countWords(text) {
     if (!text) return { frequencies: [], totalWords: 0 };
 
-    // Transform in litere mici si extragem cuvintele folosind regex (doar caractere alfanumerice + diacritice)
-    const words = text.toLowerCase().match(/[a-z0-9ăâîșț]+/g);
+    // Transform in litere mici si extragem cuvintele folosind regex (caractere alfanumerice + TOATE formele de diacritice, permitand '-' in interiorul cuvantului)
+    const words = text.toLowerCase().match(/[a-z0-9ăâîșțşţ]+(?:-[a-z0-9ăâîșțşţ]+)*/g);
     
     if (!words) return { frequencies: [], totalWords: 0 };
 

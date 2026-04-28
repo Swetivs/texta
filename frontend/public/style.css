@@ -1,3 +1,7 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
 .histogram-container {
     margin-top: 20px;
 }
@@ -26,14 +30,37 @@
 
 .bar {
     height: 25px;
-    background-color: #0d6efd;
+    background: linear-gradient(90deg, #198754, #20c997);
     border-radius: 4px;
     transition: width 0.5s ease-in-out;
     display: inline-block;
+    box-shadow: 0 2px 4px rgba(32, 201, 151, 0.4);
 }
 
 .count-label {
     margin-left: 10px;
     font-weight: 500;
-    color: #495057;
+    /* Am scos culoarea textului fixa pentru a permite tranzitia intre teme (Day/Night) */
+}
+
+/* Stiluri si Animații pentru butonul toggle */
+.theme-btn {
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.theme-btn:hover {
+    transform: scale(1.1);
+}
+
+.rotate-animation {
+    animation: rotateIcon 0.4s ease-in-out;
+}
+
+@keyframes rotateIcon {
+    0% { transform: rotate(0deg) scale(1); opacity: 1; }
+    50% { transform: rotate(180deg) scale(0.5); opacity: 0.5; }
+    100% { transform: rotate(360deg) scale(1); opacity: 1; }
 }

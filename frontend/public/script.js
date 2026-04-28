@@ -1,3 +1,37 @@
+// ===== EVENIMENTUL PENTRU SCHIMBAREA TEMEI DAY/NIGHT =====
+document.addEventListener('DOMContentLoaded', () => {
+    const htmlEl = document.documentElement;
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+
+    themeToggleBtn.addEventListener('click', () => {
+        // Redam animatia adaugand clasa CSS si stergand-o dupa completare
+        themeIcon.classList.add('rotate-animation');
+        setTimeout(() => {
+            themeIcon.classList.remove('rotate-animation');
+        }, 400);
+
+        // Verificam care e tema setata si comutam
+        const currentTheme = htmlEl.getAttribute('data-bs-theme');
+        if (currentTheme === 'dark') {
+            htmlEl.setAttribute('data-bs-theme', 'light');
+
+            // Schimbam culoarea si iconita pe Day (Soare) la Moon (Luna pt. intoarcere)
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+            themeToggleBtn.classList.replace('btn-outline-success', 'btn-outline-dark');
+        } else {
+            htmlEl.setAttribute('data-bs-theme', 'dark');
+
+            // Schimbam culoarea si iconita la loc pe Night (Luna) la Sun (Soare pt. intoarcere)
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+            themeToggleBtn.classList.replace('btn-outline-dark', 'btn-outline-success');
+        }
+    });
+});
+
+// ===== LOGICA FORMULARULUI =====
 document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -51,7 +85,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
 function displayHistogram(data, totalWords, timeTakenMs) {
     const resultsSection = document.getElementById('resultsSection');
     const container = document.getElementById('histogramContainer');
-    
+
     document.getElementById('totalWordsCount').textContent = totalWords;
     document.getElementById('timeTakenText').textContent = timeTakenMs;
 

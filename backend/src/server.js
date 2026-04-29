@@ -157,7 +157,7 @@ app.post('/admin/import', upload.single('file'), checkAdmin, (req, res) => {
         const parsed = JSON.parse(content);
         const ok = setStats(parsed);
         // clean up
-        fs.unlink(req.file.path, () => {});
+        fs.unlink(req.file.path, () => { });
         if (!ok) return res.status(400).json({ error: 'Invalid JSON structure' });
         return res.json({ ok: true });
     } catch (e) {

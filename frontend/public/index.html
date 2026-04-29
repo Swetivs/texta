@@ -9,20 +9,32 @@
       rel="stylesheet"
     />
     <!-- Integrare Fonturi Google -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <!-- Adăugăm FontAwesome pentru iconițe (fără emoji) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <!-- Buton Switcher Day/Night poziționat absolut dreapta-sus -->
     <div class="position-absolute top-0 end-0 m-3 d-flex gap-2">
-      <button id="adminBtn" class="btn btn-outline-primary d-flex align-items-center justify-content-center admin-btn">
+      <button
+        id="adminBtn"
+        class="btn btn-outline-primary d-flex align-items-center justify-content-center admin-btn"
+      >
         <i class="fas fa-user-shield me-2"></i>Admin
       </button>
-      <button id="themeToggleBtn" class="btn btn-outline-success d-flex align-items-center justify-content-center theme-btn">
+      <button
+        id="themeToggleBtn"
+        class="btn btn-outline-success d-flex align-items-center justify-content-center theme-btn"
+      >
         <i id="themeIcon" class="fas fa-sun fa-lg"></i>
       </button>
     </div>
@@ -32,12 +44,19 @@
         <!-- COLOANA STÂNGA: Top 10 Engleză -->
         <!-- Pe Desktop arată în extremitatea stângă; pe Mobil se va muta dedesubtul inputului -->
         <div class="col-12 col-md-3 order-2 order-md-1 mb-4">
-          <div class="card shadow-sm p-3 h-100 border-0 bg-secondary bg-opacity-10">
+          <div
+            class="card shadow-sm p-3 h-100 border-0 bg-secondary bg-opacity-10"
+          >
             <h5 class="text-center text-success mb-3">
               <i class="fas fa-language me-2"></i>Top 10 Global (EN)
             </h5>
-            <ol id="topEnList" class="list-group list-group-numbered text-start fw-medium">
-              <li class="list-group-item bg-transparent border-0 text-muted"><i class="fas fa-spinner fa-spin me-2"></i>Aștept date...</li>
+            <ol
+              id="topEnList"
+              class="list-group list-group-numbered text-start fw-medium"
+            >
+              <li class="list-group-item bg-transparent border-0 text-muted">
+                <i class="fas fa-spinner fa-spin me-2"></i>Aștept date...
+              </li>
             </ol>
           </div>
         </div>
@@ -75,24 +94,40 @@
                   accept=".txt"
                 />
               </div>
-              <button type="submit" class="btn btn-success w-100 fw-bold shadow-sm">
+              <button
+                type="submit"
+                class="btn btn-success w-100 fw-bold shadow-sm"
+              >
                 Analizează Textul
               </button>
             </form>
           </div>
-          
+
           <div id="resultsSection" class="row mt-5" style="display: none">
             <div class="col-12">
               <!-- Mesaj Detectare Limbă -->
-              <div id="detectedLangAlert" class="alert alert-secondary d-flex align-items-center mb-3" role="alert" style="display: none;">
+              <div
+                id="detectedLangAlert"
+                class="alert alert-secondary d-flex align-items-center mb-3"
+                role="alert"
+                style="display: none"
+              >
                 <i class="fas fa-info-circle me-2"></i>
                 <div id="detectedLangMsg">Se detectează limba...</div>
               </div>
 
               <!-- Statistici Noi -->
-              <div class="card shadow-sm p-3 mb-4 bg-success text-white rounded d-flex flex-row justify-content-between align-items-center">
-                <h5 class="mb-0">Total cuvinte: <span id="totalWordsCount" class="fw-bold">0</span></h5>
-                <span class="fs-6">Timp procesare: <span id="timeTakenText" class="fw-bold">0</span> ms</span>
+              <div
+                class="card shadow-sm p-3 mb-4 bg-success text-white rounded d-flex flex-row justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">
+                  Total cuvinte:
+                  <span id="totalWordsCount" class="fw-bold">0</span>
+                </h5>
+                <span class="fs-6"
+                  >Timp procesare:
+                  <span id="timeTakenText" class="fw-bold">0</span> ms</span
+                >
               </div>
 
               <div class="card shadow-sm p-4">
@@ -105,12 +140,19 @@
 
         <!-- COLOANA DREAPTĂ: Top 10 Română -->
         <div class="col-12 col-md-3 order-3 order-md-3 mb-4">
-          <div class="card shadow-sm p-3 h-100 border-0 bg-secondary bg-opacity-10">
+          <div
+            class="card shadow-sm p-3 h-100 border-0 bg-secondary bg-opacity-10"
+          >
             <h5 class="text-center text-success mb-3">
               <i class="fas fa-language me-2"></i>Top 10 Global (RO)
             </h5>
-            <ol id="topRoList" class="list-group list-group-numbered text-start fw-medium">
-              <li class="list-group-item bg-transparent border-0 text-muted"><i class="fas fa-spinner fa-spin me-2"></i>Aștept date...</li>
+            <ol
+              id="topRoList"
+              class="list-group list-group-numbered text-start fw-medium"
+            >
+              <li class="list-group-item bg-transparent border-0 text-muted">
+                <i class="fas fa-spinner fa-spin me-2"></i>Aștept date...
+              </li>
             </ol>
           </div>
         </div>

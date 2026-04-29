@@ -32,6 +32,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Apel initial pentru a popula topurile de-ndata ce intra userul pe pagina
     fetchGlobalStats();
+
+    // Admin button: cere parola si incerca un verify, apoi redirectioneaza daca ok
+    const adminBtn = document.getElementById('adminBtn');
+    if (adminBtn) {
+        adminBtn.addEventListener('click', async () => {
+            const pw = prompt('Introdu parola admin:');
+            if (!pw) return;
+            try {
+                const auth = 'Basic ' + btoa('admin:' + pw);
+                const res = await fetch('/admin/verify', { method: 'POST', headers: { 'Authorization': auth } });
+                if (res.ok) {
+                    // redirect to admin page
+                    window.location.href = '/admin.html';
+                } else {
+                    alert('Parolă incorectă');
+                }
+            } catch (e) {
+                alert('Eroare la verificare');
+            }
+        });
+    }
 });
 
 // ===== FETCH TOP 10 GLOBAL =====

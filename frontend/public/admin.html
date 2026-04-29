@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - Analizor Cuvinte</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script defer src="https://kit.fontawesome.com/a2d9b3f1b4.js" crossorigin="anonymous"></script>
+  </head>
+  <body class="bg-dark text-light" data-bs-theme="dark">
+    <div class="container py-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4">Panoul Admin</h1>
+        <a href="/" class="btn btn-outline-light">Înapoi</a>
+      </div>
+
+      <div id="adminAlert" style="display:none" class="alert"></div>
+
+      <div class="card p-4 mb-3">
+        <h5>Autentificare</h5>
+        <p class="text-muted">Pentru fiecare acțiune vi se va cere parola administrativă.</p>
+        <div class="mb-3">
+          <label for="adminPasswordInput" class="form-label">Parolă admin</label>
+          <input id="adminPasswordInput" type="password" class="form-control" placeholder="Parolă">
+        </div>
+        <div class="d-flex gap-2">
+          <button id="verifyAdminBtn" class="btn btn-primary">Verifică și intră</button>
+        </div>
+      </div>
+
+      <div id="adminActions" style="display:none">
+        <div class="card p-4 mb-3">
+          <h5>Statistici globale</h5>
+          <div class="mb-3">
+            <button id="exportBtn" class="btn btn-outline-success me-2">Exportă JSON</button>
+            <button id="clearBtn" class="btn btn-danger">Șterge clasamentul</button>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Importă statisici (JSON)</label>
+            <input id="importFile" type="file" accept="application/json" class="form-control" />
+            <button id="importBtn" class="btn btn-outline-primary mt-2">Importă</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/admin.js"></script>
+  </body>
+</html>

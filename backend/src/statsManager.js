@@ -18,6 +18,21 @@ function saveStats(stats) {
     fs.writeFileSync(statsFilePath, JSON.stringify(stats, null, 2), 'utf8');
 }
 
+function clearStats() {
+    const empty = { en: {}, ro: {} };
+    saveStats(empty);
+}
+
+function setStats(newStats) {
+    // Basic validation: must be object with en and ro
+    if (!newStats || typeof newStats !== 'object') return false;
+    const out = { en: {}, ro: {} };
+    if (newStats.en && typeof newStats.en === 'object') out.en = newStats.en;
+    if (newStats.ro && typeof newStats.ro === 'object') out.ro = newStats.ro;
+    saveStats(out);
+    return true;
+}
+
 function updateStats(lang, wordFrequencies) {
     if (lang !== 'en' && lang !== 'ro') return; // Ne intereseaza doar EN si RO
 
@@ -55,4 +70,4 @@ function getTop10() {
     return top;
 }
 
-module.exports = { updateStats, getTop10 };
+module.exports = { updateStats, getTop10, clearStats, setStats, getStats };

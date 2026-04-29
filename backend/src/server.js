@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { countWords } = require('./wordCounter');
 const LanguageDetect = require('languagedetect');
-const { updateStats, getTop10 } = require('./statsManager');
+const { updateStats, getTop10, clearStats, setStats, getStats } = require('./statsManager');
 
 const lngDetector = new LanguageDetect();
 const app = express();
@@ -109,4 +109,59 @@ app.post('/api/analyze-file', upload.single('textFile'), (req, res) => {
 
 app.listen(port, () => {
     console.log(`Serverul ruleaza la adresa http://localhost:${port}`);
+});
+
+// --- Admin authentication middleware (expects Basic auth: admin:<password>)
+function checkAdmin(req, res, next) {
+    const auth = req.headers['authorization'];
+    const adminPw = process.env.ADMIN_PASSWORD;
+    if (!adminPw) return res.status(500).json({ error: 'ADMIN_PASSWORD not configured on server.' });
+    if (!auth || !auth.startsWith('Basic ')) return res.status(401).json({ error: 'Unauthorized' });
+    const base = auth.slice('Basic '.length);
+    let decoded;
+    try { decoded = Buffer.from(base, 'base64').toString('utf8'); } catch (e) { return res.status(401).json({ error: 'Unauthorized' }); }
+    // expected format admin:password
+    const parts = decoded.split(':');
+    const password = parts.slice(1).join(':');
+    if (password === adminPw) return next();
+    return res.status(401).json({ error: 'Unauthorized' });
+}
+
+// Verify password endpoint (used by frontend before showing admin UI)
+app.post('/admin/verify', (req, res) => {
+    return checkAdmin(req, res, () => res.json({ ok: true }));
+});
+
+// Export full stats JSON
+app.get('/admin/export', checkAdmin, (req, res) => {
+    const all = getStats();
+    res.json(all);
+});
+
+// Clear stats
+app.post('/admin/clear', checkAdmin, (req, res) => {
+    try {
+        clearStats();
+        return res.json({ ok: true });
+    } catch (e) {
+        console.error('Error clearing stats', e);
+        return res.status(500).json({ error: 'Eroare server' });
+    }
+});
+
+// Import stats via uploaded JSON
+app.post('/admin/import', upload.single('file'), checkAdmin, (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    try {
+        const content = fs.readFileSync(req.file.path, 'utf8');
+        const parsed = JSON.parse(content);
+        const ok = setStats(parsed);
+        // clean up
+        fs.unlink(req.file.path, () => {});
+        if (!ok) return res.status(400).json({ error: 'Invalid JSON structure' });
+        return res.json({ ok: true });
+    } catch (e) {
+        console.error('Import error', e);
+        return res.status(400).json({ error: 'Invalid file' });
+    }
 });
